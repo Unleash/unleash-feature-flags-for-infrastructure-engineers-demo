@@ -1,0 +1,19 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: "1s"
+  - name: Prometheus for Internal Impact Metrics
+    uid: prometheus-internal-impact-metrics
+    type: prometheus
+    access: proxy
+    url: http://prometheus-internal-impact-metrics:9090
+    isDefault: false
+    jsonData:
+      timeInterval: "1s"

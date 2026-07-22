@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 1s
+
+scrape_configs:
+  - job_name: unleash-impact-metrics
+    metrics_path: /internal-backstage/impact/metrics
+    static_configs:
+      - targets: ["unleash:4242"]
