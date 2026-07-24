@@ -10,6 +10,7 @@ const HEALTHY_SECONDS = Number(process.env.HEALTHY_SECONDS ?? 30);
 const RAMP_SECONDS = Number(process.env.RAMP_SECONDS ?? 30);
 const MAX_DELAY_MS = Number(process.env.MAX_DELAY_MS ?? 12_000);
 const IDLE_RESET_SECONDS = Number(process.env.IDLE_RESET_SECONDS ?? 30);
+const DROP_DELAY_MS = Number(process.env.DROP_DELAY_MS ?? 1_000);
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -92,7 +93,11 @@ app.post('/write-transaction', async (request, reply) => {
   if (streaming.isEnabled('drop-write-transaction-traffic', context)) {
     writeTransactionRequests.inc({ ...labels, served: 'dropped' });
     reply.hijack();
-    request.raw.socket.destroy();
+    // Tarpit, then RST instead of FIN: the delay keeps reconnecting clients
+    // from retry-storming, and the hard abort makes them reconnect at all
+    // (a graceful close leaves wrk2 with zombie connections).
+    await sleep(DROP_DELAY_MS);
+    request.raw.socket.resetAndDestroy();
     return;
   }
   if (streaming.isEnabled('static-response-for-write-transaction-traffic', context)) {

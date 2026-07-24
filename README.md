@@ -95,6 +95,7 @@ Set in `.env` (see `.env.example`):
 | `RAMP_SECONDS`           | 30      | Ramp from healthy to fully degraded.                 |
 | `MAX_DELAY_MS`           | 12000   | Peak artificial delay (p99 lands at ~10-15s).        |
 | `IDLE_RESET_SECONDS`     | 30      | Idle gap after which the degradation epoch resets.   |
+| `DROP_DELAY_MS`          | 1000    | Tarpit before the dropped connection is reset - keeps reconnecting clients from retry-storming. |
 
 *Grafana* dashboards are generated - edit `grafana/gen-dashboards.mjs` and run `node grafana/gen-dashboards.mjs` (provisioning picks the JSONs up automatically).
 
