@@ -13,7 +13,19 @@ THREADS     ?= 2
 # while p99 ramps (the honest picture) and recovers once the flag is disabled.
 CONNECTIONS ?= $(RPS)
 
-.PHONY: build up down clean logs seed install-wrk2 load-test load-test-local info
+.PHONY: setup env-file license-check build up down clean logs seed install-wrk2 load-test load-test-local info
+
+setup: env-file license-check up
+	$(MAKE) info
+
+env-file:
+	@test -f .env || (cp .env.example .env \
+		&& echo ">> Created .env - paste your UNLEASH_LICENSE into it, then re-run: make setup" \
+		&& exit 1)
+
+license-check:
+	@grep -q '^UNLEASH_LICENSE=..*' .env \
+		|| (echo ">> UNLEASH_LICENSE is empty in .env - paste it, then re-run: make setup" && exit 1)
 
 build:
 	docker compose --profile load-test build
@@ -51,5 +63,6 @@ load-test-local:
 info:
 	@echo "Unleash:    http://localhost:4242  (admin / unleash4all)"
 	@echo "API:        http://localhost:3002"
-	@echo "Prometheus: http://localhost:9090"
+	@echo "Prometheus: http://localhost:9090  (external impact metrics)"
+	@echo "Prometheus: http://localhost:9091  (internal impact metrics)"
 	@echo "Grafana:    http://localhost:3001"

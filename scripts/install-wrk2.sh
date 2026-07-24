@@ -16,7 +16,8 @@ GCC_BIN=$(find "$(brew --prefix)/bin" -name "gcc-[0-9]*" | sort -V | tail -1)
 BUILD_DIR=$(mktemp -d)
 trap 'rm -rf "$BUILD_DIR"' EXIT
 
-git clone --depth 1 --branch fix_build_apple_m2 https://github.com/PauloMigAlmeida/wrk2 "$BUILD_DIR"
+git clone https://github.com/PauloMigAlmeida/wrk2 "$BUILD_DIR"
+git -C "$BUILD_DIR" checkout ce2be93071dfb4a0040a8bae17d7c4ab544408f6
 make -C "$BUILD_DIR" CC="$GCC_BIN" OPENSSL_LIB="$(brew --prefix openssl@3)" all
 
 install -m 0755 "$BUILD_DIR/wrk" "$(brew --prefix)/bin/wrk2"
