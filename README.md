@@ -1,4 +1,4 @@
-# unleash-feature-flags-for-infrastructure-engineers-demo
+# Feature flags for Infrastructure Engineers
 
 Minimal demo of *Unleash v8 Enterprise* safeguards and impact metrics: a small *TypeScript* and *Fastify* API with three flag-controlled endpoints, *Prometheus* + *Grafana* observability inside *Docker Compose*, and a `wrk2` load generator.
 
@@ -101,6 +101,12 @@ Set in `.env` (see `.env.example`):
 
 ## Cleaning Up
 
+You need just one command:
+
 ```bash
 make clean
 ```
+
+## License
+
+[Apache Licence 2.0](./LICENSE)
