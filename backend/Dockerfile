@@ -1,12 +1,14 @@
-FROM node:22-alpine
+FROM node:22.22.3-alpine
 
 WORKDIR /app
 
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
 COPY tsconfig.json ./
 COPY src ./src
+
+USER node
 
 EXPOSE 3000
 

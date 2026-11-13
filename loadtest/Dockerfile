@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS build
+FROM debian:bookworm-slim AS build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential libssl-dev zlib1g-dev git ca-certificates \
@@ -13,7 +13,10 @@ RUN git clone https://github.com/PauloMigAlmeida/wrk2 /wrk2 \
     && sed -i 's/char c, \*\*header = headers;/int c; char **header = headers;/' /wrk2/src/wrk.c \
     && make -C /wrk2
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends libssl3 \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /wrk2/wrk /usr/local/bin/wrk2
 COPY tier.lua /scripts/tier.lua

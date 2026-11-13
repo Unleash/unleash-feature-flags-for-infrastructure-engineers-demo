@@ -32,9 +32,9 @@ The first run creates `.env` from `.env.example` and stops - paste your `UNLEASH
 | Prometheus for internal impact metrics   | http://localhost:9091 | -                   |
 | Grafana                                  | http://localhost:3001 | anonymous (admin)   |
 
-All credentials are insecure demo defaults - never expose this stack publicly.
+All credentials are insecure demo defaults, so every port binds to `127.0.0.1` only - never expose this stack publicly.
 
-*Unleash* uses two metric stores: a dedicated *Prometheus* scraping only its internal (SDK-reported) impact metrics, and the main *Prometheus* (application and *Unleash* server metrics) as the external impact-metrics source - so metric names never appear twice in the selector. See [docs/splunk-integration/unleash-metric-fanout.html](docs/splunk-integration/unleash-metric-fanout.html) (open in a browser) for the metric fan-out topologies when integrating alongside *Splunk*.
+*Unleash* uses two metric stores: a dedicated *Prometheus* scraping only its internal (SDK-reported) impact metrics, and the main *Prometheus* (application and *Unleash* server metrics) as the external impact-metrics source - so metric names never appear twice in the selector.
 
 ## Endpoints and Flags
 
@@ -46,7 +46,7 @@ All credentials are insecure demo defaults - never expose this stack publicly.
 | `POST /write-transaction`   | streaming | `drop-write-transaction-traffic` (kill-switch)             | Drops the connection without a response.                          |
 | `POST /write-transaction`   | streaming | `static-response-for-write-transaction-traffic` (kill-switch) | Returns a static response (POST is not cacheable).             |
 
-Every request gets a uniformly random `region` context field (AMER, APAC, EEA, EU, US). `POST /write-transaction` additionally derives `userTier` from the base64 `Bearer` token and maps it to `service-integration`: PREMIUM is `tier-0`, REGULAR splits 50/50 into `tier-1`/`tier-2`, FREE is `tier-3` - all usable in activation strategies.
+Every request gets a uniformly random `region` context field (AMER, APAC, EEA, EU, US). `POST /write-transaction` additionally derives `userTier` from the base64 `Bearer` token (not real authentication; unknown values fall back to FREE) and maps it to `service-integration`: PREMIUM is `tier-0`, REGULAR splits 50/50 into `tier-1`/`tier-2`, FREE is `tier-3` - all usable in activation strategies.
 
 ## Demo Scenarios
 

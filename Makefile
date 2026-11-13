@@ -1,5 +1,7 @@
 -include .env
-export
+# Docker Compose reads .env on its own - export only what host-side commands
+# need (the seed script and tier.lua for load-test-local).
+export UNLEASH_ADMIN_TOKEN ENDPOINT
 
 ENDPOINT    ?= /get-transaction
 RPS         ?= 50

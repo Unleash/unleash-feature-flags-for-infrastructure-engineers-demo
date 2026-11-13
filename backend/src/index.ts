@@ -79,11 +79,15 @@ app.put('/schedule-calculation', async (request) => {
 });
 
 const STATIC_TRANSACTION_RESPONSE = { now: 'STATIC', static: true };
+const USER_TIERS = new Set(['FREE', 'REGULAR', 'PREMIUM']);
 
 app.post('/write-transaction', async (request, reply) => {
+  // Demo only, not authentication: the Bearer token is just base64 of the
+  // user tier. Unknown values fall back to FREE, so clients cannot create
+  // unbounded metric label values.
   const b64 = (request.headers.authorization ?? '').replace(/^Bearer\s+/i, '');
   const decoded = Buffer.from(b64, 'base64').toString('utf8').trim();
-  const userTier = decoded || 'FREE';
+  const userTier = USER_TIERS.has(decoded) ? decoded : 'FREE';
   const region = randomRegion();
   const integration = serviceIntegration(userTier);
   const context = {
